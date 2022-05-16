@@ -54,7 +54,7 @@ class Viewer extends React.Component {
     });
   };
 
-  setStateForContainer = (data) => {
+  setStateForContainer = async (data) => {
     const currentUser = authenticationService.currentUserValue;
     let userVars = {};
 
@@ -84,6 +84,8 @@ class Viewer extends React.Component {
       };
     });
 
+    const variables = await this.fetchOrgEnvironmentVariables();
+
     this.setState(
       {
         currentSidebarTab: 2,
@@ -102,7 +104,7 @@ class Viewer extends React.Component {
             currentUser: userVars,
             theme: { name: this.props.darkMode ? 'dark' : 'light' },
             urlparams: JSON.parse(JSON.stringify(queryString.parse(this.props.location.search))),
-            environment_variables: {},
+            environment_variables: variables,
           },
         },
         dataQueries: data.data_queries,
@@ -125,21 +127,13 @@ class Viewer extends React.Component {
   };
 
   fetchOrgEnvironmentVariables = async () => {
-    orgEnvironmentVariableService.getVariables().then((data) => {
-      const variables = {};
+    const variables = {};
+    await orgEnvironmentVariableService.getVariables().then((data) => {
       data.variables.map((variable) => {
         variables[variable.variable_name] = variable.value;
       });
-      this.setState({
-        currentState: {
-          ...this.state.currentState,
-          globals: {
-            ...this.state.currentState.globals,
-            environment_variables: variables,
-          },
-        },
-      });
     });
+    return variables;
   };
 
   loadApplicationBySlug = (slug) => {
@@ -162,9 +156,6 @@ class Viewer extends React.Component {
     const slug = this.props.match.params.slug;
     const appId = this.props.match.params.id;
     const versionId = this.props.match.params.versionId;
-
-    //fetch org env vars
-    this.fetchOrgEnvironmentVariables();
 
     this.setState({ isLoading: false });
     slug ? this.loadApplicationBySlug(slug) : this.loadApplicationByVersion(appId, versionId);
