@@ -264,9 +264,9 @@ export const Organization = function Organization() {
             <div onClick={showCreateModal}>Add workspace</div>
           </div>
         )}
+        <div className="dropdown-divider"></div>
         {admin && (
           <>
-            <div className="dropdown-divider"></div>
             <Link data-testid="settingsBtn" to="/users" className="dropdown-item">
               Manage Users
             </Link>
