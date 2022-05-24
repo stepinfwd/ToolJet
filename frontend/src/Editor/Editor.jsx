@@ -1176,6 +1176,7 @@ class Editor extends React.Component {
                   'text-danger': this.state.saveError,
                   'd-none': this.isVersionReleased(),
                 })}
+                data-cy="autosave-indicator"
               >
                 {this.state.isSaving ? <Spinner size="small" /> : 'All changes are saved'}
               </span>
@@ -1201,9 +1202,7 @@ class Editor extends React.Component {
                   <a
                     href={appVersionPreviewLink}
                     target="_blank"
-                    className={`btn btn-sm font-500 color-primary border-0  ${
-                      app?.current_version_id ? '' : 'disabled'
-                    }`}
+                    className="btn btn-sm font-500 color-primary border-0"
                     rel="noreferrer"
                   >
                     Preview
@@ -1487,6 +1486,7 @@ class Editor extends React.Component {
                             apps={apps}
                             allComponents={appDefinition.components}
                             isSourceSelected={this.state.isSourceSelected}
+                            isQueryPaneDragging={this.state.isQueryPaneDragging}
                           />
                         </div>
                       </div>
